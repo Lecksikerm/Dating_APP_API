@@ -200,7 +200,7 @@ Before deploying:
 
 1. Set all env vars in your host (Render/Railway/Fly/EC2/etc.).
 2. Set `NODE_ENV=production`.
-3. Set `FRONTEND_URL` to your deployed frontend origin.
+3. Set `FRONTEND_URL` to your deployed frontend origin (exact URL the browser uses: scheme + host, no path). Example: `https://love-connect-app.vercel.app`. This drives CORS, Socket.IO, and email links. Optional: `FRONTEND_URLS` for extra comma-separated origins (preview deploys, `www` vs apex).
 4. Ensure MongoDB allowlist includes your backend host.
 5. Rotate any previously exposed credentials.
 6. Use HTTPS for full media + call support.
@@ -213,11 +213,11 @@ Before deploying:
 4. Fill all env vars marked `sync: false` in Render dashboard.
 5. Deploy and wait for the first build.
 6. Verify health endpoint:
-   - `https://<your-render-service>.onrender.com/health`
+   - `https://https://love-connect-n36t.onrender.com/api/health`
 
 ## Troubleshooting
 
-- CORS errors: verify `FRONTEND_URL` and origin match exactly.
+- CORS errors: the request `Origin` header must match `FRONTEND_URL` exactly (including `https://`). If `FRONTEND_URL` on Render is still `http://localhost:5173` or unset, preflight fails with “No `Access-Control-Allow-Origin` header”. Redeploy after changing env.
 - Socket auth failures: verify frontend sends valid JWT in `auth.token`.
 - Calls not connecting: WebRTC can require TURN in restrictive networks.
 - Upload failures: verify Cloudinary credentials and file size limits.

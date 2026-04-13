@@ -20,8 +20,14 @@ connectDB();
 
 const server = http.createServer(app);
 
+const splitOrigins = (value) => {
+    if (!value || typeof value !== 'string') return [];
+    return value.split(',').map((item) => item.trim()).filter(Boolean);
+};
+
 const allowedOrigins = [
-    process.env.FRONTEND_URL,
+    process.env.FRONTEND_URL && process.env.FRONTEND_URL.trim(),
+    ...splitOrigins(process.env.FRONTEND_URLS),
     'http://localhost:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
