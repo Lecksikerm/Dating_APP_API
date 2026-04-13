@@ -28,16 +28,13 @@ const allowedOrigins = [
   ...splitOrigins(process.env.FRONTEND_URLS),
   'http://localhost:3000',
   'http://localhost:5173',
-  'http://127.0.0.1:3000',       
-  'http://127.0.0.1:5173',        
-  'https://love-connect-app.vercel.app',  
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173',
 ].filter(Boolean);
-
-console.log('Allowed origins:', allowedOrigins); 
 
 app.use(cors({
   origin: function (origin, callback) {
-    
+
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -51,8 +48,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
-
-app.options('*', cors());
 
 // Security headers
 app.use(helmet());
