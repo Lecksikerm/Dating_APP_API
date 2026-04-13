@@ -76,6 +76,14 @@ app.use((req, res, next) => {
 });
 
 // Health check
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'LoveConnect API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
