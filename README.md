@@ -205,6 +205,16 @@ Before deploying:
 5. Rotate any previously exposed credentials.
 6. Use HTTPS for full media + call support.
 
+### Deploy to Render (Quick Start)
+
+1. Push this project to GitHub.
+2. In Render, click **New +** -> **Blueprint**.
+3. Select your repo. Render will detect `render.yaml`.
+4. Fill all env vars marked `sync: false` in Render dashboard.
+5. Deploy and wait for the first build.
+6. Verify health endpoint:
+   - `https://<your-render-service>.onrender.com/health`
+
 ## Troubleshooting
 
 - CORS errors: verify `FRONTEND_URL` and origin match exactly.
