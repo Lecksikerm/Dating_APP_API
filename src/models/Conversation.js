@@ -8,8 +8,7 @@ const conversationSchema = new mongoose.Schema({
     }],
     participantsHash: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     lastMessage: {
         type: mongoose.Schema.Types.ObjectId,
