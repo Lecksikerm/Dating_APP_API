@@ -68,6 +68,7 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     verificationToken: String,
+    verificationTokenExpires: Date,
     onlineStatus: {
         type: Boolean,
         default: false

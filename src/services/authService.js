@@ -52,6 +52,7 @@ exports.signup = async (name, email, password, age, gender) => {
         age,
         gender,
         verificationToken: crypto.createHash('sha256').update(verificationToken).digest('hex'),
+        verificationTokenExpires: Date.now() + 24 * 60 * 60 * 1000,
     });
 
     const verificationURL = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
@@ -74,16 +75,23 @@ exports.signup = async (name, email, password, age, gender) => {
 exports.verifyEmail = async (token) => {
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
+    // ⬇️ ADD expiry check here
     const user = await User.findOne({
         verificationToken: hashedToken,
+        verificationTokenExpires: { $gt: Date.now() },
     });
 
     if (!user) {
         throw new AppError('Token is invalid or has expired', 400);
     }
 
+    if (user.isVerified) {
+        return user;
+    }
+
     user.isVerified = true;
     user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
     await user.save({ validateBeforeSave: false });
 
     return user;
@@ -104,7 +112,7 @@ exports.login = async (email, password) => {
         throw new AppError('Please verify your email first', 401);
     }
 
-    if (user.isActive === false) {  
+    if (user.isActive === false) {
         throw new AppError('Your account has been deactivated', 401);
     }
 
