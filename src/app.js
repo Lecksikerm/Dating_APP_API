@@ -30,6 +30,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5173',
+  'https://love-connect-app.vercel.app',
 ].filter(Boolean);
 
 app.use(cors({
@@ -42,7 +43,8 @@ app.use(cors({
     }
 
     logger.warn(`CORS blocked for origin: ${origin}`);
-    return callback(new Error(`CORS not allowed for origin: ${origin}`));
+    // Use (null, false) — do not pass Error into Express; that skips CORS headers on the response.
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -57,6 +59,8 @@ if (process.env.NODE_ENV === 'production') {
     max: 100,
     windowMs: 60 * 60 * 1000,
     message: 'Too many requests from this IP, please try again in an hour!',
+    // OPTIONS preflight must not be rate-limited — blocked responses often omit CORS headers.
+    skip: (req) => req.method === 'OPTIONS',
   });
   app.use('/api', limiter);
 }
